@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__: 'user'
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String , unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String ,nullable=False)
@@ -18,6 +19,21 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
     class Planet(db.Model):
-    __tablename__: 'planet'
-    id: Mapped[int] = mapped_column(primary_key= True)
-    name: Mapped[str]= mapped_column(String100)
+        __tablename__: 'planet'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    diameter: Mapped[int] = mapped_column(Integer, nullable=True)
+    climate: Mapped[str] = mapped_column(String, nullable=True)
+    population: Mapped[int] = mapped_column(Integer, nullable=True)
+    favorites: Mapped[list["Favorite"]] = relationship(
+        "Favorite", 
+        back_populates="planet")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "diameter": self.diameter,
+            "climate": self.climate,
+            "population": self.population
+        }
