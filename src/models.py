@@ -9,7 +9,7 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
-
+    favorites: Mapped[list["Favorite"]]= relationship("Favorite" , back_populates="user")
 
     def serialize(self):
         return {
